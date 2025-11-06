@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Decomposition Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #4facfe;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .name-entry {
+            text-align: center;
+        }
+
+        .name-entry h2 {
+            color: #4facfe;
+            margin-bottom: 20px;
+        }
+
+        .name-entry input {
+            padding: 15px;
+            font-size: 1.2em;
+            border: 3px solid #4facfe;
+            border-radius: 10px;
+            min-width: 250px;
+            margin-right: 10px;
+        }
+
+        .level-selection {
+            display: none;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .level-btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .level-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .level-btn.easy {
+            background: #4ade80;
+            color: white;
+        }
+
+        .level-btn.medium {
+            background: #fbbf24;
+            color: white;
+        }
+
+        .level-btn.hard {
+            background: #f87171;
+            color: white;
+        }
+
+        .level-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-area {
+            display: none;
+        }
+
+        .game-area.active {
+            display: block;
+        }
+
+        .score-board {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1.2em;
+        }
+
+        .score-item {
+            font-weight: bold;
+        }
+
+        .score-item span {
+            color: #4facfe;
+        }
+
+        .problem-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .original-problem {
+            font-size: 3em;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .step-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .step-title {
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .step-content {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .input-row label {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .input-row input {
+            width: 100px;
+            padding: 12px;
+            font-size: 1.5em;
+            border: 3px solid #d1d5db;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .input-row input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .input-row input.correct {
+            background: #d1fae5;
+            border-color: #4ade80;
+        }
+
+        .input-row input.incorrect {
+            background: #fee2e2;
+            border-color: #f87171;
+        }
+
+        .input-row input:disabled {
+            background: #f3f4f6;
+        }
+
+        .number-bond {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #e5e7eb;
+        }
+
+        .bond-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .bond-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            background: white;
+        }
+
+        .bond-circle.main {
+            width: 100px;
+            height: 100px;
+            background: #667eea;
+            color: white;
+            font-size: 1.8em;
+        }
+
+        .bond-arrow {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .hint-section {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .hint-btn {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            background: #fbbf24;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .hint-btn:hover {
+            background: #f59e0b;
+            transform: scale(1.05);
+        }
+
+        .hint-display {
+            display: none;
+            background: #fef3c7;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 3px solid #fbbf24;
+        }
+
+        .hint-display.visible {
+            display: block;
+        }
+
+        .number-line {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .number-cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #d1d5db;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .number-cell.start {
+            background: #fef3c7;
+            border-color: #fbbf24;
+            color: #92400e;
+        }
+
+        .number-cell.target {
+            background: #d1fae5;
+            border-color: #4ade80;
+            color: #065f46;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.4em;
+            background: #4facfe;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #3d8cd9;
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .feedback.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .next-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.4em;
+            background: #4ade80;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .next-btn.show {
+            display: block;
+        }
+
+        .next-btn:hover {
+            background: #22c55e;
+        }
+
+        .celebration {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .celebration.show {
+            display: block;
+        }
+
+        .celebration h2 {
+            color: #4facfe;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .score-log-view {
+            display: none;
+        }
+
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .score-table th {
+            background: #4facfe;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1em;
+        }
+
+        .score-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .score-table tr:hover {
+            background: #f9fafb;
+        }
+
+        .score-table .score-value {
+            font-weight: bold;
+            color: #4facfe;
+            font-size: 1.2em;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .level-badge.easy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .level-badge.medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .level-badge.hard {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty-log {
+            text-align: center;
+            padding: 40px;
+            color: #9ca3af;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .original-problem {
+                font-size: 2em;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+
+            .bond-visual {
+                flex-direction: column;
+            }
+
+            .score-table {
+                font-size: 0.85em;
+            }
+
+            .score-table th,
+            .score-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🧮 Strategic Decomposition!</h1>
+        
+        <div class="name-entry" id="nameEntry">
+            <h2>Enter Your Name</h2>
+            <div style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="studentName" placeholder="Your name...">
+                <button class="submit-btn" style="width: auto; margin: 0; padding: 15px 30px;" onclick="saveName()">Start Game</button>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="hint-btn" onclick="showScoreLog()">📊 View Score Log</button>
+            </div>
+        </div>
+        
+        <div class="level-selection" id="levelSelection">
+            <button class="level-btn easy" onclick="startGame('easy')">Easy (20s-40s)</button>
+            <button class="level-btn medium" onclick="startGame('medium')">Medium (40s-70s)</button>
+            <button class="level-btn hard" onclick="startGame('hard')">Hard (70s-90s)</button>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="score-board">
+                <div class="score-item">Round: <span id="round">1</span>/8</div>
+                <div class="score-item">Correct: <span id="score">0</span>/8</div>
+            </div>
+
+            <div class="problem-display">
+                <div class="original-problem" id="originalProblem">47 + 25</div>
+            </div>
+
+            <div class="step-container">
+                <div class="step-title">Step 1: Which number is closer to the next ten?</div>
+                <div class="input-row">
+                    <label>Closer number:</label>
+                    <input type="number" id="closerNumber" placeholder="?">
+                    <label>Next ten:</label>
+                    <input type="number" id="nextTen" placeholder="?">
+                </div>
+            </div>
+
+            <div class="step-container">
+                <div class="step-title">Step 2: How much do we need to reach the next ten?</div>
+                <div class="input-row">
+                    <label>We need:</label>
+                    <input type="number" id="amountNeeded" placeholder="?">
+                </div>
+            </div>
+
+            <div class="step-container">
+                <div class="step-title">Step 3: Break the other number</div>
+                <div class="step-content">
+                    Break <span id="otherNumber" style="color: #667eea; font-weight: bold;">25</span> into two parts:
+                </div>
+                <div class="number-bond">
+                    <div class="bond-visual">
+                        <div class="bond-circle main" id="bondMain">25</div>
+                        <div class="bond-arrow">→</div>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div class="input-row">
+                                <input type="number" id="part1" placeholder="?" style="width: 80px;">
+                            </div>
+                            <div class="input-row">
+                                <input type="number" id="part2" placeholder="?" style="width: 80px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-container">
+                <div class="step-title">Step 4: Solve the new problem</div>
+                <div class="input-row">
+                    <input type="number" id="newFirst" placeholder="?" style="width: 80px;">
+                    <span style="font-size: 1.5em;">+</span>
+                    <input type="number" id="newSecond" placeholder="?" style="width: 80px;">
+                    <span style="font-size: 1.5em;">=</span>
+                    <input type="number" id="finalAnswer" placeholder="?" style="width: 100px;">
+                </div>
+            </div>
+
+            <div class="hint-section">
+                <button class="hint-btn" onclick="toggleHint()">💡 Show Hint</button>
+                <div class="hint-display" id="hintDisplay">
+                    <h3 style="margin-bottom: 15px; color: #92400e;">Visual Helper</h3>
+                    <div id="hintContent"></div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswer()">Check Answer</button>
+            
+            <div class="feedback" id="feedback"></div>
+            <button class="next-btn" onclick="nextQuestion()">Next Question ➜</button>
+        </div>
+
+        <div class="celebration" id="celebration">
+            <h2>🎉 Excellent Work, <span id="celebrationName"></span>!</h2>
+            <p style="font-size: 2em; color: #4facfe; font-weight: bold; margin: 20px 0;">
+                <span id="finalScore"></span> out of 8 correct!
+            </p>
+            <p style="color: #6b7280; font-size: 1.2em; margin-top: 5px;">Level: <span id="celebrationLevel"></span></p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+                <button class="submit-btn" onclick="location.reload()" style="flex: 1; min-width: 150px;">Play Again</button>
+                <button class="hint-btn" onclick="showScoreLog()" style="padding: 18px 25px; font-size: 1.4em;">📊 View Scores</button>
+            </div>
+        </div>
+
+        <div class="score-log-view" id="scoreLogView">
+            <h2 style="text-align: center; color: #4facfe; margin-bottom: 20px;">📊 Score Log</h2>
+            <div id="scoreLogContent" style="max-height: 500px; overflow-y: auto;"></div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="submit-btn" onclick="backToStart()" style="background: #4facfe;">Back to Game</button>
+                <button class="submit-btn" onclick="clearScoreLog()" style="background: #f87171;">Clear All Scores</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLevel = '';
+        let num1 = 0;
+        let num2 = 0;
+        let closerNum = 0;
+        let otherNum = 0;
+        let targetTen = 0;
+        let needed = 0;
+        let correctAnswer = 0;
+        let round = 1;
+        let score = 0;
+        let studentName = '';
+        let usedProblems = [];
+
+        const levelSettings = {
+            easy: { name: 'Easy', min1: 22, max1: 38, min2: 15, max2: 35 },
+            medium: { name: 'Medium', min1: 41, max1: 68, min2: 20, max2: 45 },
+            hard: { name: 'Hard', min1: 71, max1: 89, min2: 25, max2: 55 }
+        };
+
+        function saveName() {
+            const nameInput = document.getElementById('studentName');
+            studentName = nameInput.value.trim();
+            
+            if (studentName === '') {
+                alert('Please enter your name!');
+                return;
+            }
+            
+            document.getElementById('nameEntry').style.display = 'none';
+            document.getElementById('levelSelection').style.display = 'flex';
+        }
+
+        function backToStart() {
+            document.getElementById('scoreLogView').style.display = 'none';
+            document.getElementById('nameEntry').style.display = 'block';
+            document.getElementById('studentName').value = '';
+        }
+
+        function startGame(level) {
+            currentLevel = level;
+            round = 1;
+            score = 0;
+            usedProblems = [];
+            
+            document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('gameArea').classList.add('active');
+            document.getElementById('celebration').classList.remove('show');
+            document.getElementById('levelSelection').style.display = 'none';
+            
+            generateNewQuestion();
+        }
+
+        function generateNewQuestion() {
+            const settings = levelSettings[currentLevel];
+            
+            let problemKey;
+            do {
+                num1 = Math.floor(Math.random() * (settings.max1 - settings.min1 + 1)) + settings.min1;
+                num2 = Math.floor(Math.random() * (settings.max2 - settings.min2 + 1)) + settings.min2;
+                
+                // Avoid numbers ending in 0
+                while (num1 % 10 === 0) {
+                    num1 = Math.floor(Math.random() * (settings.max1 - settings.min1 + 1)) + settings.min1;
+                }
+                while (num2 % 10 === 0) {
+                    num2 = Math.floor(Math.random() * (settings.max2 - settings.min2 + 1)) + settings.min2;
+                }
+                
+                problemKey = `${num1}+${num2}`;
+            } while (usedProblems.includes(problemKey));
+            
+            usedProblems.push(problemKey);
+            
+            // Determine which is closer to next ten
+            const onesDigit1 = num1 % 10;
+            const onesDigit2 = num2 % 10;
+            const distance1 = 10 - onesDigit1;
+            const distance2 = 10 - onesDigit2;
+            
+            if (distance1 <= distance2) {
+                closerNum = num1;
+                otherNum = num2;
+            } else {
+                closerNum = num2;
+                otherNum = num1;
+            }
+            
+            targetTen = Math.ceil(closerNum / 10) * 10;
+            needed = targetTen - closerNum;
+            correctAnswer = num1 + num2;
+            
+            // Update display
+            document.getElementById('originalProblem').textContent = `${num1} + ${num2}`;
+            document.getElementById('otherNumber').textContent = otherNum;
+            document.getElementById('bondMain').textContent = otherNum;
+            document.getElementById('round').textContent = round;
+            document.getElementById('score').textContent = score;
+            
+            // Clear all inputs
+            const inputs = ['closerNumber', 'nextTen', 'amountNeeded', 'part1', 'part2', 'newFirst', 'newSecond', 'finalAnswer'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.value = '';
+                input.className = '';
+                input.disabled = false;
+            });
+            
+            // Hide feedback and next button
+            document.getElementById('feedback').classList.remove('show');
+            document.querySelector('.next-btn').classList.remove('show');
+            document.querySelector('.submit-btn').disabled = false;
+            
+            // Hide hint
+            document.getElementById('hintDisplay').classList.remove('visible');
+            
+            generateHint();
+        }
+
+        function generateHint() {
+            const hintContent = document.getElementById('hintContent');
+            
+            const base = Math.floor(closerNum / 10) * 10;
+            const end = targetTen;
+            
+            let numberLineHTML = '<div class="number-line">';
+            for (let i = base; i <= end; i++) {
+                let className = 'number-cell';
+                if (i === closerNum) className += ' start';
+                if (i === targetTen) className += ' target';
+                numberLineHTML += `<div class="${className}">${i}</div>`;
+            }
+            numberLineHTML += '</div>';
+            numberLineHTML += `<p style="text-align: center; font-size: 1.1em; margin-top: 10px;">
+                ${closerNum} is closer to ${targetTen}. It needs ${needed} more.
+            </p>`;
+            hintContent.innerHTML = numberLineHTML;
+        }
+
+        function toggleHint() {
+            document.getElementById('hintDisplay').classList.toggle('visible');
+        }
+
+        function checkAnswer() {
+            const inputs = {
+                closerNumber: parseInt(document.getElementById('closerNumber').value),
+                nextTen: parseInt(document.getElementById('nextTen').value),
+                amountNeeded: parseInt(document.getElementById('amountNeeded').value),
+                part1: parseInt(document.getElementById('part1').value),
+                part2: parseInt(document.getElementById('part2').value),
+                newFirst: parseInt(document.getElementById('newFirst').value),
+                newSecond: parseInt(document.getElementById('newSecond').value),
+                finalAnswer: parseInt(document.getElementById('finalAnswer').value)
+            };
+            
+            // Validate all inputs
+            for (let key in inputs) {
+                if (isNaN(inputs[key])) {
+                    alert('Please fill in all answers!');
+                    return;
+                }
+            }
+            
+            // Check each answer
+            const checks = {
+                closerNumber: inputs.closerNumber === closerNum,
+                nextTen: inputs.nextTen === targetTen,
+                amountNeeded: inputs.amountNeeded === needed,
+                part1: (inputs.part1 === needed && inputs.part2 === (otherNum - needed)) ||
+                       (inputs.part1 === (otherNum - needed) && inputs.part2 === needed),
+                part2: true, // Already checked with part1
+                newFirst: inputs.newFirst === targetTen,
+                newSecond: inputs.newSecond === (otherNum - needed),
+                finalAnswer: inputs.finalAnswer === correctAnswer
+            };
+            
+            // Update input colors
+            document.getElementById('closerNumber').className = checks.closerNumber ? 'correct' : 'incorrect';
+            document.getElementById('nextTen').className = checks.nextTen ? 'correct' : 'incorrect';
+            document.getElementById('amountNeeded').className = checks.amountNeeded ? 'correct' : 'incorrect';
+            document.getElementById('part1').className = checks.part1 ? 'correct' : 'incorrect';
+            document.getElementById('part2').className = checks.part1 ? 'correct' : 'incorrect';
+            document.getElementById('newFirst').className = checks.newFirst ? 'correct' : 'incorrect';
+            document.getElementById('newSecond').className = checks.newSecond ? 'correct' : 'incorrect';
+            document.getElementById('finalAnswer').className = checks.finalAnswer ? 'correct' : 'incorrect';
+            
+            // Disable all inputs
+            for (let key in inputs) {
+                document.getElementById(key).disabled = true;
+            }
+            document.querySelector('.submit-btn').disabled = true;
+            
+            // Check if all correct
+            const allCorrect = Object.values(checks).every(v => v === true);
+            
+            const feedback = document.getElementById('feedback');
+            if (allCorrect) {
+                score++;
+                feedback.className = 'feedback correct show';
+                feedback.textContent = `🎉 Perfect! ${closerNum} needed ${needed} to make ${targetTen}. Break ${otherNum} into ${needed} and ${otherNum - needed}. Then ${targetTen} + ${otherNum - needed} = ${correctAnswer}!`;
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.textContent = `Not quite! The closer number was ${closerNum}, which needs ${needed} to reach ${targetTen}. Break ${otherNum} into ${needed} and ${otherNum - needed}. Then ${targetTen} + ${otherNum - needed} = ${correctAnswer}.`;
+            }
+            
+            document.getElementById('score').textContent = score;
+            document.querySelector('.next-btn').classList.add('show');
+        }
+
+        function nextQuestion() {
+            if (round < 8) {
+                round++;
+                generateNewQuestion();
+            } else {
+                showCelebration();
+            }
+        }
+
+        function showCelebration() {
+            saveScore();
+            
+            document.getElementById('gameArea').classList.remove('active');
+            document.getElementById('celebration').classList.add('show');
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('celebrationName').textContent = studentName;
+            document.getElementById('celebrationLevel').textContent = levelSettings[currentLevel].name;
+        }
+
+        function saveScore() {
+            const scoreData = {
+                name: studentName,
+                date: new Date().toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                score: score,
+                level: currentLevel,
+                timestamp: new Date().getTime()
+            };
+
+            let scores = JSON.parse(localStorage.getItem('decompositionScores')) || [];
+            scores.push(scoreData);
+            localStorage.setItem('decompositionScores', JSON.stringify(scores));
+        }
+
+        function showScoreLog() {
+            document.getElementById('nameEntry').style.display = 'none';
+            document.getElementById('celebration').classList.remove('show');
+            document.getElementById('gameArea').classList.remove('active');
+            document.getElementById('scoreLogView').style.display = 'block';
+            
+            const scores = JSON.parse(localStorage.getItem('decompositionScores')) || [];
+            const logContent = document.getElementById('scoreLogContent');
+            
+            if (scores.length === 0) {
+                logContent.innerHTML = '<div class="empty-log">No scores yet! Play some games to see scores here.</div>';
+                return;
+            }
+
+            scores.sort((a, b) => b.timestamp - a.timestamp);
+
+            let tableHTML = `
+                <table class="score-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Level</th>
+                            <th>Correct Answers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            scores.forEach(scoreData => {
+                tableHTML += `
+                    <tr>
+                        <td>${scoreData.name}</td>
+                        <td>${scoreData.date}</td>
+                        <td><span class="level-badge ${scoreData.level}">${levelSettings[scoreData.level].name}</span></td>
+                        <td class="score-value">${scoreData.score}/8</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            logContent.innerHTML = tableHTML;
+        }
+
+        function clearScoreLog() {
+            if (confirm('Are you sure you want to clear all scores? This cannot be undone.')) {
+                localStorage.removeItem('decompositionScores');
+                showScoreLog();
+            }
+        }
+
+        // Allow Enter key to submit
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (document.getElementById('nameEntry').style.display !== 'none') {
+                    saveName();
+                } else if (!document.querySelector('.submit-btn').disabled && document.getElementById('gameArea').classList.contains('active')) {
+                    checkAnswer();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
