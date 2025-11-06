@@ -343,14 +343,226 @@
             color: #4CAF50;
             font-size: 1.5em;
         }
+        .start-screen {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border: 4px solid #4CAF50;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .start-screen h2 {
+            color: #2E7D32;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .student-input {
+            margin: 20px 0;
+        }
+        .student-input label {
+            display: block;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .student-input input {
+            width: 300px;
+            padding: 15px;
+            font-size: 1.3em;
+            border: 3px solid #4CAF50;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .start-game-btn {
+            margin-top: 30px;
+            padding: 20px 50px;
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        .start-game-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        .score-log-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .score-log-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        .modal-header h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin: 0;
+        }
+        .close-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .close-btn:hover {
+            background: #d32f2f;
+        }
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .score-table th,
+        .score-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #E0E0E0;
+        }
+        .score-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.1em;
+            position: sticky;
+            top: 0;
+        }
+        .score-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .score-table td {
+            font-size: 1.05em;
+        }
+        .export-btn {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        .clear-btn {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+        .empty-log {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.3em;
+        }
+        .student-info {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .student-info strong {
+            color: #2E7D32;
+            font-size: 1.2em;
+        }
+        .game-area {
+            display: none;
+        }
+        .game-area.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <button class="score-log-btn" onclick="openScoreLog()">📊 Score Log</button>
+
     <div class="game-container">
-        <div class="header">
-            <h1>🎯 Make the Next Hundred 🎯</h1>
-            <p style="font-size: 1.3em; color: #666;">Step-by-Step Strategy Practice</p>
+        <!-- Start Screen -->
+        <div class="start-screen" id="start-screen">
+            <h2>🎯 Welcome! 🎯</h2>
+            <p style="font-size: 1.3em; color: #555; margin: 20px 0;">
+                Enter your information to begin practicing the Make the Next Hundred strategy!
+            </p>
+            <div class="student-input">
+                <label for="student-name">Student Name:</label>
+                <input type="text" id="student-name" placeholder="Enter your name" maxlength="50">
+            </div>
+            <button class="start-game-btn" onclick="startSession()">
+                🚀 Start Practice
+            </button>
         </div>
+
+        <!-- Game Area -->
+        <div class="game-area" id="game-area">
+            <div class="student-info" id="student-info">
+                <strong>Student:</strong> <span id="display-name"></span> | 
+                <strong>Date:</strong> <span id="display-date"></span>
+            </div>
+
+            <div class="header">
+                <h1>🎯 Make the Next Hundred 🎯</h1>
+                <p style="font-size: 1.3em; color: #666;">Step-by-Step Strategy Practice</p>
+            </div>
 
         <div class="score-board">
             <div class="score-item">
@@ -502,6 +714,29 @@
         <button class="next-btn hidden" id="next-btn" onclick="nextQuestion()">
             Next Question →
         </button>
+        </div>
+        <!-- End of Game Area -->
+    </div>
+
+    <!-- Score Log Modal -->
+    <div class="modal" id="score-log-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📊 Score Log</h2>
+                <button class="close-btn" onclick="closeScoreLog()">✕ Close</button>
+            </div>
+            <div style="margin: 20px 0;">
+                <button class="export-btn" onclick="exportToCSV()">
+                    📥 Export to CSV
+                </button>
+                <button class="export-btn clear-btn" onclick="clearScoreLog()">
+                    🗑️ Clear All Data
+                </button>
+            </div>
+            <div id="score-log-content">
+                <!-- Generated dynamically -->
+            </div>
+        </div>
     </div>
 
     <div class="celebration" id="celebration">🎉</div>
@@ -520,7 +755,11 @@
             remaining: 0,
             correctAnswer: 0,
             currentStep: 1,
-            stepsCompleted: [false, false, false, false, false]
+            stepsCompleted: [false, false, false, false, false],
+            studentName: '',
+            sessionDate: '',
+            startTime: null,
+            questionDetails: []
         };
 
         const problemSets = [
@@ -532,6 +771,135 @@
             {first: 195, second: 38}, {first: 292, second: 45}, {first: 293, second: 56},
             {first: 294, second: 67}, {first: 295, second: 43}
         ];
+
+        // Session Management
+        function startSession() {
+            const nameInput = document.getElementById('student-name');
+            const name = nameInput.value.trim();
+            
+            if (!name) {
+                alert('Please enter your name!');
+                nameInput.focus();
+                return;
+            }
+            
+            game.studentName = name;
+            game.sessionDate = new Date().toLocaleDateString();
+            game.startTime = new Date();
+            
+            document.getElementById('display-name').textContent = name;
+            document.getElementById('display-date').textContent = game.sessionDate;
+            
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-area').classList.add('active');
+            
+            initGame();
+        }
+
+        // Score Log Management
+        function getScoreLog() {
+            const log = localStorage.getItem('makeHundredScoreLog');
+            return log ? JSON.parse(log) : [];
+        }
+
+        function saveToScoreLog(sessionData) {
+            const log = getScoreLog();
+            log.push(sessionData);
+            localStorage.setItem('makeHundredScoreLog', JSON.stringify(log));
+        }
+
+        function openScoreLog() {
+            const log = getScoreLog();
+            const modal = document.getElementById('score-log-modal');
+            const content = document.getElementById('score-log-content');
+            
+            if (log.length === 0) {
+                content.innerHTML = '<div class="empty-log">📭 No scores recorded yet!</div>';
+            } else {
+                let tableHTML = `
+                    <table class="score-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Student Name</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Time</th>
+                                <th>Mode</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                log.forEach((entry, index) => {
+                    const percentage = Math.round((entry.score / entry.totalQuestions) * 100);
+                    const badge = percentage >= 80 ? '🌟' : percentage >= 60 ? '👍' : '💪';
+                    
+                    tableHTML += `
+                        <tr>
+                            <td>${entry.date}</td>
+                            <td><strong>${entry.studentName}</strong></td>
+                            <td>${entry.score} / ${entry.totalQuestions}</td>
+                            <td>${badge} ${percentage}%</td>
+                            <td>${entry.duration}</td>
+                            <td>${entry.mode === 'strategy' ? 'Step-by-Step' : 'Quick Answer'}</td>
+                        </tr>
+                    `;
+                });
+                
+                tableHTML += '</tbody></table>';
+                content.innerHTML = tableHTML;
+            }
+            
+            modal.classList.add('show');
+        }
+
+        function closeScoreLog() {
+            document.getElementById('score-log-modal').classList.remove('show');
+        }
+
+        function exportToCSV() {
+            const log = getScoreLog();
+            
+            if (log.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+            
+            let csv = 'Date,Student Name,Score,Total Questions,Percentage,Duration,Mode\n';
+            
+            log.forEach(entry => {
+                const percentage = Math.round((entry.score / entry.totalQuestions) * 100);
+                csv += `${entry.date},"${entry.studentName}",${entry.score},${entry.totalQuestions},${percentage}%,${entry.duration},${entry.mode}\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `make_hundred_scores_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function clearScoreLog() {
+            if (confirm('Are you sure you want to delete ALL score data? This cannot be undone!')) {
+                if (confirm('Really delete everything? This is your last chance!')) {
+                    localStorage.removeItem('makeHundredScoreLog');
+                    closeScoreLog();
+                    alert('✓ All data has been cleared!');
+                }
+            }
+        }
+
+        function calculateDuration(startTime, endTime) {
+            const diff = Math.round((endTime - startTime) / 1000); // seconds
+            const minutes = Math.floor(diff / 60);
+            const seconds = diff % 60;
+            return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+        }
 
         function initGame() {
             generateQuestion();
@@ -795,7 +1163,21 @@
         }
 
         function showResults() {
+            const endTime = new Date();
             const percentage = Math.round((game.score / game.totalQuestions) * 100);
+            
+            // Save to score log
+            const sessionData = {
+                date: game.sessionDate,
+                studentName: game.studentName,
+                score: game.score,
+                totalQuestions: game.totalQuestions,
+                duration: calculateDuration(game.startTime, endTime),
+                mode: game.mode,
+                timestamp: endTime.toISOString()
+            };
+            
+            saveToScoreLog(sessionData);
             
             let message, emoji;
             if (percentage === 100) {
@@ -816,14 +1198,31 @@
                 <div style="text-align: center; padding: 50px;">
                     <div style="font-size: 8em; margin-bottom: 30px;">${emoji}</div>
                     <h1 style="font-size: 3em; color: #667eea; margin-bottom: 30px;">${message}</h1>
+                    <div style="background: #E8F5E9; border: 3px solid #4CAF50; border-radius: 15px; padding: 20px; margin: 20px auto; max-width: 500px;">
+                        <div style="font-size: 1.3em; color: #2E7D32; margin-bottom: 10px;">
+                            <strong>${game.studentName}</strong>
+                        </div>
+                        <div style="font-size: 1.1em; color: #666;">
+                            ${game.sessionDate}
+                        </div>
+                    </div>
                     <div style="font-size: 2.5em; color: #666; margin-bottom: 20px;">
                         <strong style="color: #4CAF50;">${game.score}</strong> / ${game.totalQuestions} Correct
                     </div>
-                    <div style="font-size: 2em; color: #666; margin-bottom: 40px;">
+                    <div style="font-size: 2em; color: #666; margin-bottom: 20px;">
                         Score: <strong style="color: #f5576c;">${percentage}%</strong>
+                    </div>
+                    <div style="font-size: 1.5em; color: #666; margin-bottom: 40px;">
+                        ⏱️ Time: <strong>${sessionData.duration}</strong>
+                    </div>
+                    <div style="font-size: 1.2em; color: #4CAF50; margin-bottom: 30px; padding: 15px; background: #E8F5E9; border-radius: 10px;">
+                        ✓ Your score has been saved to the log!
                     </div>
                     <button class="next-btn" onclick="location.reload()">
                         🔄 Play Again
+                    </button>
+                    <button class="next-btn" onclick="openScoreLog()" style="background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); margin-left: 10px;">
+                        📊 View Score Log
                     </button>
                 </div>
             `;
@@ -831,18 +1230,31 @@
 
         // Allow Enter key to submit
         document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && game.mode === 'strategy') {
-                for (let i = 1; i <= 5; i++) {
-                    const input = document.getElementById(`input${i}`);
-                    if (input === document.activeElement && !input.disabled) {
-                        checkStep(i);
-                        break;
+            if (e.key === 'Enter') {
+                // Check if on start screen
+                if (document.getElementById('student-name') === document.activeElement) {
+                    startSession();
+                    return;
+                }
+                
+                // Check if in strategy mode
+                if (game.mode === 'strategy') {
+                    for (let i = 1; i <= 5; i++) {
+                        const input = document.getElementById(`input${i}`);
+                        if (input === document.activeElement && !input.disabled) {
+                            checkStep(i);
+                            break;
+                        }
                     }
                 }
             }
         });
 
-        window.onload = initGame;
+        window.onload = function() {
+            // Show start screen on load
+            document.getElementById('start-screen').style.display = 'block';
+            document.getElementById('game-area').classList.remove('active');
+        };
     </script>
 </body>
 </html>
