@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Make the Next Hundred - Interactive Game</title>
+    <title>Make the Next Hundred - Step by Step</title>
     <style>
         * {
             margin: 0;
@@ -17,7 +17,7 @@
             padding: 20px;
         }
         .game-container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -32,25 +32,6 @@
             color: #667eea;
             font-size: 3em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        .strategy-box {
-            background: linear-gradient(135deg, #FFE082 0%, #FFD54F 100%);
-            border: 4px solid #F57F17;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-        }
-        .strategy-box h3 {
-            color: #E65100;
-            margin-bottom: 10px;
-            font-size: 1.5em;
-        }
-        .strategy-box p {
-            color: #5D4037;
-            font-size: 1.2em;
-            line-height: 1.6;
         }
         .score-board {
             display: grid;
@@ -78,223 +59,211 @@
             background: linear-gradient(135deg, #E8EAF6 0%, #C5CAE9 100%);
             border: 4px solid #5E35B1;
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
             margin: 30px 0;
             text-align: center;
         }
-        .problem-equation {
-            font-size: 4em;
+        .equation {
+            font-size: 3.5em;
             font-weight: bold;
             color: #5E35B1;
             margin: 20px 0;
         }
-        .problem-parts {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
+        .mode-selector {
+            text-align: center;
+            margin: 20px 0;
         }
-        .number-part {
-            font-size: 3.5em;
+        .mode-btn {
+            padding: 12px 30px;
+            margin: 0 10px;
+            font-size: 1.2em;
             font-weight: bold;
-            padding: 15px 25px;
-            border-radius: 15px;
+            background: white;
+            color: #667eea;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .first-number {
-            background-color: #FFCDD2;
-            color: #C62828;
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
         }
-        .plus-sign {
-            color: #5E35B1;
+        .mode-btn:hover {
+            transform: translateY(-2px);
         }
-        .second-number {
-            background-color: #C8E6C9;
-            color: #2E7D32;
+        .strategy-container {
+            display: none;
         }
-        .equals-sign {
-            color: #5E35B1;
-        }
-        .question-mark {
-            background-color: #FFE082;
-            color: #F57F17;
-        }
-        .hint-button {
+        .strategy-container.active {
             display: block;
-            margin: 20px auto;
-            padding: 15px 40px;
+        }
+        .step-card {
+            background: #FFF9C4;
+            border: 4px solid #F57F17;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+        .step-card.active {
+            opacity: 1;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .step-card.completed {
+            background: #C8E6C9;
+            border-color: #4CAF50;
+            opacity: 1;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .step-number {
+            background: #F57F17;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .step-card.completed .step-number {
+            background: #4CAF50;
+        }
+        .step-title {
             font-size: 1.5em;
             font-weight: bold;
-            background: linear-gradient(135deg, #FFD54F 0%, #FFB300 100%);
+            color: #E65100;
+        }
+        .step-card.completed .step-title {
+            color: #2E7D32;
+        }
+        .step-content {
+            font-size: 1.2em;
             color: #5D4037;
+            margin: 15px 0;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .input-label {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+        }
+        .answer-input {
+            width: 100px;
+            padding: 12px;
+            font-size: 1.8em;
+            text-align: center;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .answer-input.correct {
+            border-color: #4CAF50;
+            background-color: #C8E6C9;
+        }
+        .answer-input.wrong {
+            border-color: #f44336;
+            background-color: #FFCDD2;
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .check-btn {
+            padding: 12px 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
-            border-radius: 15px;
+            border-radius: 10px;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             transition: all 0.3s;
         }
-        .hint-button:hover {
+        .check-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
-        .hint-button.used {
-            background: linear-gradient(135deg, #C5CAE9 0%, #9FA8DA 100%);
-            cursor: default;
+        .check-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
-        .visual-helper {
-            background: #FFF9C4;
-            border: 4px solid #F57F17;
-            border-radius: 15px;
-            padding: 30px;
-            margin: 25px 0;
+        .feedback-message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
             display: none;
         }
-        .visual-helper.show {
+        .feedback-message.show {
             display: block;
         }
-        .visual-helper h3 {
-            color: #E65100;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.8em;
+        .feedback-message.correct {
+            background: #C8E6C9;
+            color: #2E7D32;
+            border: 2px solid #4CAF50;
         }
-        .strategy-steps {
-            background: white;
+        .feedback-message.wrong {
+            background: #FFCDD2;
+            color: #C62828;
+            border: 2px solid #f44336;
+        }
+        .hint-box {
+            background: #E3F2FD;
+            border: 2px solid #2196F3;
             border-radius: 10px;
-            padding: 25px;
-            margin: 15px 0;
-        }
-        .step {
-            display: flex;
-            align-items: center;
-            margin: 20px 0;
             padding: 15px;
-            background: #f5f5f5;
-            border-radius: 10px;
-            border-left: 5px solid #667eea;
+            margin: 15px 0;
+            display: none;
         }
-        .step-number {
-            background: #667eea;
+        .hint-box.show {
+            display: block;
+        }
+        .hint-btn {
+            padding: 8px 20px;
+            font-size: 1.1em;
+            background: #2196F3;
             color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-right: 20px;
-            flex-shrink: 0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
         }
-        .step-text {
-            font-size: 1.3em;
-            color: #333;
-            line-height: 1.6;
+        .hint-btn:hover {
+            background: #1976D2;
         }
-        .step-equation {
-            font-weight: bold;
-            color: #5E35B1;
-            margin-top: 5px;
-            font-size: 1.4em;
-        }
-        .number-line-container {
-            background: white;
-            padding: 40px 20px;
+        .quick-answer {
+            background: linear-gradient(135deg, #E8EAF6 0%, #C5CAE9 100%);
+            border: 3px solid #5E35B1;
             border-radius: 15px;
+            padding: 25px;
             margin: 20px 0;
-            border: 3px solid #667eea;
-        }
-        .number-line {
-            position: relative;
-            height: 100px;
-            margin: 40px 20px;
-        }
-        .line {
-            position: absolute;
-            top: 50%;
-            left: 5%;
-            right: 5%;
-            height: 8px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            border-radius: 4px;
-        }
-        .tick {
-            position: absolute;
-            width: 4px;
-            height: 50px;
-            background-color: #333;
-            top: 25px;
-        }
-        .tick.major {
-            height: 60px;
-            width: 6px;
-            top: 20px;
-        }
-        .tick-label {
-            position: absolute;
-            top: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #333;
-        }
-        .current-marker {
-            position: absolute;
-            width: 35px;
-            height: 35px;
-            background-color: #f5576c;
-            border: 4px solid white;
-            border-radius: 50%;
-            top: 32px;
-            transform: translateX(-50%);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            z-index: 10;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.1); }
-        }
-        .target-marker {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background-color: #4CAF50;
-            border: 4px solid white;
-            border-radius: 50%;
-            top: 30px;
-            transform: translateX(-50%);
-            box-shadow: 0 0 20px #4CAF50;
-            z-index: 10;
-        }
-        .jump-arc {
-            position: absolute;
-            height: 50px;
-            border: 4px dashed #FF9800;
-            border-bottom: none;
-            border-radius: 100px 100px 0 0;
-            top: 5px;
-        }
-        .jump-label {
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #FF9800;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-weight: bold;
-            font-size: 1.2em;
-            white-space: nowrap;
+            text-align: center;
         }
         .answer-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 15px;
-            margin: 30px 0;
+            margin: 20px 0;
         }
         .answer-btn {
             padding: 20px;
@@ -329,29 +298,9 @@
             25% { transform: translateX(-10px); }
             75% { transform: translateX(10px); }
         }
-        .feedback {
-            text-align: center;
-            font-size: 2em;
-            font-weight: bold;
-            margin: 20px 0;
-            padding: 20px;
-            border-radius: 15px;
-            display: none;
-        }
-        .feedback.show {
-            display: block;
-        }
-        .feedback.correct {
-            background-color: #C8E6C9;
-            color: #2E7D32;
-        }
-        .feedback.wrong {
-            background-color: #FFCDD2;
-            color: #C62828;
-        }
         .next-btn {
             display: block;
-            margin: 20px auto;
+            margin: 30px auto;
             padding: 15px 40px;
             font-size: 1.5em;
             font-weight: bold;
@@ -388,22 +337,19 @@
             50% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
+        .checkmark {
+            display: inline-block;
+            margin-left: 10px;
+            color: #4CAF50;
+            font-size: 1.5em;
+        }
     </style>
 </head>
 <body>
     <div class="game-container">
         <div class="header">
-            <h1>🎯 Make the Next Hundred! 🎯</h1>
-            <p style="font-size: 1.3em; color: #666;">Master the strategy for adding across hundreds!</p>
-        </div>
-
-        <div class="strategy-box">
-            <h3>📚 The Strategy</h3>
-            <p>
-                <strong>Step 1:</strong> Find how many more to make the next hundred<br>
-                <strong>Step 2:</strong> Add that amount first<br>
-                <strong>Step 3:</strong> Add the rest!
-            </p>
+            <h1>🎯 Make the Next Hundred 🎯</h1>
+            <p style="font-size: 1.3em; color: #666;">Step-by-Step Strategy Practice</p>
         </div>
 
         <div class="score-board">
@@ -419,44 +365,139 @@
                 <div class="score-label">Streak 🔥</div>
                 <div class="score-value" id="streak">0</div>
             </div>
-            <div class="score-item">
-                <div class="score-label">Hints Used</div>
-                <div class="score-value" id="hints">0</div>
-            </div>
         </div>
 
         <div class="problem-display">
-            <div class="problem-parts">
-                <div class="number-part first-number" id="first-num">297</div>
-                <div class="number-part plus-sign">+</div>
-                <div class="number-part second-number" id="second-num">56</div>
-                <div class="number-part equals-sign">=</div>
-                <div class="number-part question-mark">?</div>
+            <div class="equation" id="equation">297 + 56 = ?</div>
+        </div>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="setMode('strategy')">
+                Step-by-Step Strategy
+            </button>
+            <button class="mode-btn" onclick="setMode('quick')">
+                Quick Answer
+            </button>
+        </div>
+
+        <!-- Strategy Mode -->
+        <div class="strategy-container active" id="strategy-mode">
+            <!-- Step 1 -->
+            <div class="step-card active" id="step1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Find the next hundred</div>
+                </div>
+                <div class="step-content">
+                    <span id="first-num-text">297</span> is close to which hundred?
+                </div>
+                <div class="input-group">
+                    <span class="input-label">Next hundred:</span>
+                    <input type="number" class="answer-input" id="input1" placeholder="?">
+                    <button class="check-btn" onclick="checkStep(1)">Check</button>
+                    <button class="hint-btn" onclick="showHint(1)">💡 Hint</button>
+                </div>
+                <div class="hint-box" id="hint1">
+                    💡 Hundreds are: 100, 200, 300, 400... Which one comes after <span id="first-num-hint">297</span>?
+                </div>
+                <div class="feedback-message" id="feedback1"></div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-card" id="step2">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">How many more to get there?</div>
+                </div>
+                <div class="step-content">
+                    <span id="eq-step2">297 + ___ = 300</span>
+                </div>
+                <div class="input-group">
+                    <span class="input-label">How many more?</span>
+                    <input type="number" class="answer-input" id="input2" placeholder="?">
+                    <button class="check-btn" onclick="checkStep(2)">Check</button>
+                    <button class="hint-btn" onclick="showHint(2)">💡 Hint</button>
+                </div>
+                <div class="hint-box" id="hint2">
+                    💡 Count up from <span id="count-from">297</span> to <span id="count-to">300</span>. How many numbers?
+                </div>
+                <div class="feedback-message" id="feedback2"></div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-card" id="step3">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Break apart the second number</div>
+                </div>
+                <div class="step-content">
+                    We need to break <span id="second-num-text">56</span> into <span id="amount-needed-text">3</span> and something else.
+                </div>
+                <div class="input-group">
+                    <span class="input-label" id="break-apart-eq">56 = 3 + ___</span>
+                    <input type="number" class="answer-input" id="input3" placeholder="?">
+                    <button class="check-btn" onclick="checkStep(3)">Check</button>
+                    <button class="hint-btn" onclick="showHint(3)">💡 Hint</button>
+                </div>
+                <div class="hint-box" id="hint3">
+                    💡 If <span id="hint3-num">56</span> = <span id="hint3-part">3</span> + ___, subtract: <span id="hint3-num2">56</span> - <span id="hint3-part2">3</span> = ?
+                </div>
+                <div class="feedback-message" id="feedback3"></div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-card" id="step4">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Add to make the hundred</div>
+                </div>
+                <div class="step-content">
+                    <span id="eq-step4">297 + 3 = ___</span>
+                </div>
+                <div class="input-group">
+                    <span class="input-label">Answer:</span>
+                    <input type="number" class="answer-input" id="input4" placeholder="?">
+                    <button class="check-btn" onclick="checkStep(4)">Check</button>
+                    <button class="hint-btn" onclick="showHint(4)">💡 Hint</button>
+                </div>
+                <div class="hint-box" id="hint4">
+                    💡 This should equal the next hundred you found in Step 1!
+                </div>
+                <div class="feedback-message" id="feedback4"></div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-card" id="step5">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Add the rest</div>
+                </div>
+                <div class="step-content">
+                    <span id="eq-step5">300 + 53 = ___</span>
+                </div>
+                <div class="input-group">
+                    <span class="input-label">Final Answer:</span>
+                    <input type="number" class="answer-input" id="input5" placeholder="?">
+                    <button class="check-btn" onclick="checkStep(5)">Check</button>
+                    <button class="hint-btn" onclick="showHint(5)">💡 Hint</button>
+                </div>
+                <div class="hint-box" id="hint5">
+                    💡 Add the hundred and the remaining amount together!
+                </div>
+                <div class="feedback-message" id="feedback5"></div>
             </div>
         </div>
 
-        <button class="hint-button" id="hint-btn" onclick="showHint()">
-            💡 Show Me the Strategy!
-        </button>
-
-        <div class="visual-helper" id="visual-helper">
-            <h3>🎓 Step-by-Step Strategy</h3>
-            <div class="strategy-steps" id="strategy-steps">
-                <!-- Generated dynamically -->
-            </div>
-            <div class="number-line-container">
-                <h4 style="text-align: center; color: #667eea; margin-bottom: 10px;">Number Line</h4>
-                <div class="number-line" id="number-line">
+        <!-- Quick Mode -->
+        <div class="strategy-container" id="quick-mode">
+            <div class="quick-answer">
+                <h3 style="color: #5E35B1; margin-bottom: 20px;">What is the answer?</h3>
+                <div class="answer-buttons" id="quick-answers">
                     <!-- Generated dynamically -->
                 </div>
+                <div class="feedback-message" id="quick-feedback"></div>
             </div>
         </div>
-
-        <div class="answer-buttons" id="answers">
-            <!-- Generated dynamically -->
-        </div>
-
-        <div class="feedback" id="feedback"></div>
 
         <button class="next-btn hidden" id="next-btn" onclick="nextQuestion()">
             Next Question →
@@ -466,40 +507,30 @@
     <div class="celebration" id="celebration">🎉</div>
 
     <script>
-        // Game state
         let game = {
+            mode: 'strategy',
             currentQuestion: 1,
             totalQuestions: 10,
             score: 0,
             streak: 0,
-            hintsUsed: 0,
-            hintShown: false,
-            answered: false,
             firstNumber: 0,
             secondNumber: 0,
-            correctAnswer: 0,
             nextHundred: 0,
-            amountToHundred: 0
+            amountToHundred: 0,
+            remaining: 0,
+            correctAnswer: 0,
+            currentStep: 1,
+            stepsCompleted: [false, false, false, false, false]
         };
 
-        // Problem sets - numbers close to hundreds
         const problemSets = [
-            // Easy - close to hundred (need 1-5)
             {first: 196, second: 27}, {first: 197, second: 34}, {first: 198, second: 45},
             {first: 199, second: 23}, {first: 296, second: 38}, {first: 297, second: 56},
             {first: 298, second: 44}, {first: 299, second: 67}, {first: 396, second: 29},
             {first: 397, second: 48}, {first: 398, second: 35}, {first: 399, second: 52},
-            
-            // Medium - need 5-10
             {first: 192, second: 34}, {first: 193, second: 48}, {first: 194, second: 39},
             {first: 195, second: 38}, {first: 292, second: 45}, {first: 293, second: 56},
-            {first: 294, second: 67}, {first: 295, second: 43}, {first: 392, second: 54},
-            {first: 393, second: 48}, {first: 394, second: 39}, {first: 395, second: 67},
-            
-            // Harder - need 10-15
-            {first: 187, second: 45}, {first: 188, second: 56}, {first: 189, second: 34},
-            {first: 287, second: 48}, {first: 288, second: 67}, {first: 289, second: 55},
-            {first: 387, second: 46}, {first: 388, second: 38}, {first: 389, second: 57}
+            {first: 294, second: 67}, {first: 295, second: 43}
         ];
 
         function initGame() {
@@ -507,47 +538,185 @@
         }
 
         function generateQuestion() {
-            game.answered = false;
-            game.hintShown = false;
-            
-            // Select random problem
             const problem = problemSets[Math.floor(Math.random() * problemSets.length)];
             game.firstNumber = problem.first;
             game.secondNumber = problem.second;
-            game.correctAnswer = game.firstNumber + game.secondNumber;
             game.nextHundred = Math.ceil(game.firstNumber / 100) * 100;
             game.amountToHundred = game.nextHundred - game.firstNumber;
-            
+            game.remaining = game.secondNumber - game.amountToHundred;
+            game.correctAnswer = game.firstNumber + game.secondNumber;
+            game.currentStep = 1;
+            game.stepsCompleted = [false, false, false, false, false];
+
             // Update display
-            document.getElementById('first-num').textContent = game.firstNumber;
-            document.getElementById('second-num').textContent = game.secondNumber;
+            document.getElementById('equation').textContent = `${game.firstNumber} + ${game.secondNumber} = ?`;
             document.getElementById('score').textContent = game.score;
             document.getElementById('streak').textContent = game.streak;
             document.getElementById('current').textContent = game.currentQuestion;
             document.getElementById('total').textContent = game.totalQuestions;
-            document.getElementById('hints').textContent = game.hintsUsed;
+
+            // Update step text
+            document.getElementById('first-num-text').textContent = game.firstNumber;
+            document.getElementById('first-num-hint').textContent = game.firstNumber;
+            document.getElementById('eq-step2').textContent = `${game.firstNumber} + ___ = ${game.nextHundred}`;
+            document.getElementById('count-from').textContent = game.firstNumber;
+            document.getElementById('count-to').textContent = game.nextHundred;
+            document.getElementById('second-num-text').textContent = game.secondNumber;
             
-            // Reset hint button
-            document.getElementById('hint-btn').classList.remove('used');
-            document.getElementById('hint-btn').textContent = '💡 Show Me the Strategy!';
-            document.getElementById('visual-helper').classList.remove('show');
-            
-            // Generate answer options
-            generateAnswers();
-            
-            // Hide feedback and next button
-            document.getElementById('feedback').classList.remove('show');
+            // Reset all steps
+            for (let i = 1; i <= 5; i++) {
+                const step = document.getElementById(`step${i}`);
+                step.classList.remove('active', 'completed');
+                const input = document.getElementById(`input${i}`);
+                input.value = '';
+                input.classList.remove('correct', 'wrong');
+                input.disabled = false;
+                document.getElementById(`feedback${i}`).classList.remove('show');
+                document.getElementById(`hint${i}`).classList.remove('show');
+            }
+            document.getElementById('step1').classList.add('active');
+
+            // Generate quick mode answers
+            generateQuickAnswers();
+
+            // Hide next button
             document.getElementById('next-btn').classList.add('hidden');
         }
 
-        function generateAnswers() {
-            const container = document.getElementById('answers');
+        function setMode(mode) {
+            game.mode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (mode === 'strategy') {
+                document.getElementById('strategy-mode').classList.add('active');
+                document.getElementById('quick-mode').classList.remove('active');
+            } else {
+                document.getElementById('strategy-mode').classList.remove('active');
+                document.getElementById('quick-mode').classList.add('active');
+            }
+        }
+
+        function checkStep(step) {
+            const input = document.getElementById(`input${step}`);
+            const value = parseInt(input.value);
+            const feedback = document.getElementById(`feedback${step}`);
+            let correct = false;
+
+            switch(step) {
+                case 1:
+                    correct = value === game.nextHundred;
+                    break;
+                case 2:
+                    correct = value === game.amountToHundred;
+                    break;
+                case 3:
+                    correct = value === game.remaining;
+                    break;
+                case 4:
+                    correct = value === game.nextHundred;
+                    break;
+                case 5:
+                    correct = value === game.correctAnswer;
+                    break;
+            }
+
+            if (correct) {
+                input.classList.add('correct');
+                input.classList.remove('wrong');
+                input.disabled = true;
+                feedback.className = 'feedback-message show correct';
+                feedback.innerHTML = getCorrectMessage(step);
+                
+                game.stepsCompleted[step - 1] = true;
+                document.getElementById(`step${step}`).classList.add('completed');
+                
+                // Update next steps with correct values
+                updateStepContent(step);
+                
+                setTimeout(() => {
+                    if (step < 5) {
+                        document.getElementById(`step${step}`).classList.remove('active');
+                        document.getElementById(`step${step + 1}`).classList.add('active');
+                        document.getElementById(`input${step + 1}`).focus();
+                    } else {
+                        // All steps complete!
+                        game.score++;
+                        game.streak++;
+                        showCelebration();
+                        document.getElementById('score').textContent = game.score;
+                        document.getElementById('streak').textContent = game.streak;
+                        setTimeout(() => {
+                            document.getElementById('next-btn').classList.remove('hidden');
+                        }, 1000);
+                    }
+                    feedback.classList.remove('show');
+                }, 1500);
+            } else {
+                input.classList.add('wrong');
+                input.classList.remove('correct');
+                feedback.className = 'feedback-message show wrong';
+                feedback.textContent = getWrongMessage(step);
+                
+                setTimeout(() => {
+                    input.classList.remove('wrong');
+                    input.value = '';
+                    feedback.classList.remove('show');
+                }, 2000);
+            }
+        }
+
+        function getCorrectMessage(step) {
+            const messages = [
+                `✓ Correct! The next hundred after ${game.firstNumber} is ${game.nextHundred}!`,
+                `✓ Perfect! You need ${game.amountToHundred} more to reach ${game.nextHundred}!`,
+                `✓ Great! ${game.secondNumber} = ${game.amountToHundred} + ${game.remaining}!`,
+                `✓ Excellent! ${game.firstNumber} + ${game.amountToHundred} = ${game.nextHundred}!`,
+                `🎉 Perfect! The final answer is ${game.correctAnswer}!`
+            ];
+            return messages[step - 1];
+        }
+
+        function getWrongMessage(step) {
+            const messages = [
+                `❌ Not quite. Try again!`,
+                `❌ Not quite. Count carefully!`,
+                `❌ Not quite. Try subtracting!`,
+                `❌ Not quite. What's the next hundred?`,
+                `❌ Not quite. Try again!`
+            ];
+            return messages[step - 1];
+        }
+
+        function updateStepContent(step) {
+            if (step === 1) {
+                document.getElementById('eq-step2').textContent = `${game.firstNumber} + ___ = ${game.nextHundred}`;
+                document.getElementById('count-to').textContent = game.nextHundred;
+            } else if (step === 2) {
+                document.getElementById('amount-needed-text').textContent = game.amountToHundred;
+                document.getElementById('break-apart-eq').textContent = `${game.secondNumber} = ${game.amountToHundred} + ___`;
+                document.getElementById('hint3-num').textContent = game.secondNumber;
+                document.getElementById('hint3-num2').textContent = game.secondNumber;
+                document.getElementById('hint3-part').textContent = game.amountToHundred;
+                document.getElementById('hint3-part2').textContent = game.amountToHundred;
+            } else if (step === 3) {
+                document.getElementById('eq-step4').textContent = `${game.firstNumber} + ${game.amountToHundred} = ___`;
+            } else if (step === 4) {
+                document.getElementById('eq-step5').textContent = `${game.nextHundred} + ${game.remaining} = ___`;
+            }
+        }
+
+        function showHint(step) {
+            document.getElementById(`hint${step}`).classList.add('show');
+        }
+
+        function generateQuickAnswers() {
+            const container = document.getElementById('quick-answers');
             container.innerHTML = '';
             
             let options = [game.correctAnswer];
             let used = [game.correctAnswer];
             
-            // Generate wrong answers
             while (options.length < 4) {
                 let offset = Math.floor(Math.random() * 20) - 10;
                 if (offset === 0) offset = 5;
@@ -558,183 +727,34 @@
                 }
             }
             
-            // Shuffle
             options.sort(() => Math.random() - 0.5);
             
-            // Create buttons
             options.forEach(option => {
                 const btn = document.createElement('button');
                 btn.className = 'answer-btn';
                 btn.textContent = option;
-                btn.onclick = () => checkAnswer(option, btn);
+                btn.onclick = () => checkQuickAnswer(option, btn);
                 container.appendChild(btn);
             });
         }
 
-        function showHint() {
-            if (!game.hintShown && !game.answered) {
-                game.hintShown = true;
-                game.hintsUsed++;
-                
-                document.getElementById('hint-btn').classList.add('used');
-                document.getElementById('hint-btn').textContent = '✓ Strategy Shown Below!';
-                document.getElementById('hints').textContent = game.hintsUsed;
-                
-                // Show visual helper
-                document.getElementById('visual-helper').classList.add('show');
-                
-                // Generate strategy steps
-                generateStrategySteps();
-                
-                // Draw number line
-                drawNumberLine();
-            }
-        }
-
-        function generateStrategySteps() {
-            const container = document.getElementById('strategy-steps');
-            const remaining = game.secondNumber - game.amountToHundred;
-            
-            container.innerHTML = `
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div>
-                        <div class="step-text">Find the next hundred after ${game.firstNumber}</div>
-                        <div class="step-equation">Next hundred = ${game.nextHundred}</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div>
-                        <div class="step-text">How many more to get to ${game.nextHundred}?</div>
-                        <div class="step-equation">${game.firstNumber} + ${game.amountToHundred} = ${game.nextHundred}</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div>
-                        <div class="step-text">Break apart ${game.secondNumber} into ${game.amountToHundred} and ${remaining}</div>
-                        <div class="step-equation">${game.secondNumber} = ${game.amountToHundred} + ${remaining}</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div>
-                        <div class="step-text">First add ${game.amountToHundred} to make ${game.nextHundred}</div>
-                        <div class="step-equation">${game.firstNumber} + ${game.amountToHundred} = ${game.nextHundred}</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div>
-                        <div class="step-text">Then add the remaining ${remaining}</div>
-                        <div class="step-equation">${game.nextHundred} + ${remaining} = ${game.correctAnswer}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function drawNumberLine() {
-            const container = document.getElementById('number-line');
-            container.innerHTML = '';
-            
-            const prevHundred = game.nextHundred - 100;
-            const start = prevHundred;
-            const end = game.nextHundred + 50;
-            
-            // Draw line
-            const line = document.createElement('div');
-            line.className = 'line';
-            container.appendChild(line);
-            
-            // Draw ticks for hundreds
-            [prevHundred, game.nextHundred].forEach(num => {
-                const tick = document.createElement('div');
-                tick.className = 'tick major';
-                const pos = 5 + ((num - start) / (end - start)) * 90;
-                tick.style.left = pos + '%';
-                
-                const label = document.createElement('div');
-                label.className = 'tick-label';
-                label.textContent = num;
-                tick.appendChild(label);
-                
-                container.appendChild(tick);
-            });
-            
-            // Current number marker
-            const current = document.createElement('div');
-            current.className = 'current-marker';
-            const currentPos = 5 + ((game.firstNumber - start) / (end - start)) * 90;
-            current.style.left = currentPos + '%';
-            container.appendChild(current);
-            
-            // Target marker
-            const target = document.createElement('div');
-            target.className = 'target-marker';
-            const targetPos = 5 + ((game.nextHundred - start) / (end - start)) * 90;
-            target.style.left = targetPos + '%';
-            container.appendChild(target);
-            
-            // Jump arc to hundred
-            const arc1 = document.createElement('div');
-            arc1.className = 'jump-arc';
-            arc1.style.left = currentPos + '%';
-            arc1.style.width = (targetPos - currentPos) + '%';
-            
-            const label1 = document.createElement('div');
-            label1.className = 'jump-label';
-            label1.textContent = `+${game.amountToHundred}`;
-            arc1.appendChild(label1);
-            container.appendChild(arc1);
-            
-            // Final answer marker
-            const finalPos = 5 + ((game.correctAnswer - start) / (end - start)) * 90;
-            if (finalPos < 95) {
-                const final = document.createElement('div');
-                final.className = 'target-marker';
-                final.style.left = finalPos + '%';
-                final.style.backgroundColor = '#FF9800';
-                final.style.boxShadow = '0 0 20px #FF9800';
-                container.appendChild(final);
-                
-                // Jump arc from hundred to answer
-                const remaining = game.secondNumber - game.amountToHundred;
-                const arc2 = document.createElement('div');
-                arc2.className = 'jump-arc';
-                arc2.style.left = targetPos + '%';
-                arc2.style.width = (finalPos - targetPos) + '%';
-                
-                const label2 = document.createElement('div');
-                label2.className = 'jump-label';
-                label2.textContent = `+${remaining}`;
-                arc2.appendChild(label2);
-                container.appendChild(arc2);
-            }
-        }
-
-        function checkAnswer(answer, button) {
-            if (game.answered) return;
-            
-            game.answered = true;
+        function checkQuickAnswer(answer, button) {
+            const feedback = document.getElementById('quick-feedback');
             const isCorrect = answer === game.correctAnswer;
             
             if (isCorrect) {
                 button.classList.add('correct');
                 game.score++;
                 game.streak++;
-                showFeedback(true);
+                feedback.className = 'feedback-message show correct';
+                feedback.textContent = `🎉 Correct! ${game.firstNumber} + ${game.secondNumber} = ${game.correctAnswer}`;
                 showCelebration();
             } else {
                 button.classList.add('wrong');
                 game.streak = 0;
-                showFeedback(false);
+                feedback.className = 'feedback-message show wrong';
+                feedback.textContent = `❌ Not quite. The answer is ${game.correctAnswer}. Try using the step-by-step strategy!`;
                 
-                // Highlight correct answer
                 setTimeout(() => {
                     document.querySelectorAll('.answer-btn').forEach(btn => {
                         if (parseInt(btn.textContent) === game.correctAnswer) {
@@ -744,32 +764,14 @@
                 }, 500);
             }
             
-            // Update display
             document.getElementById('score').textContent = game.score;
             document.getElementById('streak').textContent = game.streak;
             
-            // Show next button
+            document.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = true);
+            
             setTimeout(() => {
                 document.getElementById('next-btn').classList.remove('hidden');
             }, 1500);
-        }
-
-        function showFeedback(isCorrect) {
-            const feedback = document.getElementById('feedback');
-            feedback.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
-            
-            if (isCorrect) {
-                const messages = [
-                    '🎉 Perfect! You made the hundred!',
-                    '⭐ Excellent strategy!',
-                    '🌟 You\'re a hundred-maker!',
-                    '💯 Amazing work!',
-                    '🎯 You nailed it!'
-                ];
-                feedback.textContent = messages[Math.floor(Math.random() * messages.length)];
-            } else {
-                feedback.textContent = `❌ Not quite! The answer is ${game.correctAnswer}. Click the hint button to see the strategy!`;
-            }
         }
 
         function showCelebration() {
@@ -817,11 +819,8 @@
                     <div style="font-size: 2.5em; color: #666; margin-bottom: 20px;">
                         <strong style="color: #4CAF50;">${game.score}</strong> / ${game.totalQuestions} Correct
                     </div>
-                    <div style="font-size: 2em; color: #666; margin-bottom: 20px;">
+                    <div style="font-size: 2em; color: #666; margin-bottom: 40px;">
                         Score: <strong style="color: #f5576c;">${percentage}%</strong>
-                    </div>
-                    <div style="font-size: 1.8em; color: #666; margin-bottom: 40px;">
-                        💡 Hints Used: <strong style="color: #FFB300;">${game.hintsUsed}</strong> / ${game.totalQuestions}
                     </div>
                     <button class="next-btn" onclick="location.reload()">
                         🔄 Play Again
@@ -830,7 +829,19 @@
             `;
         }
 
-        // Initialize game
+        // Allow Enter key to submit
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && game.mode === 'strategy') {
+                for (let i = 1; i <= 5; i++) {
+                    const input = document.getElementById(`input${i}`);
+                    if (input === document.activeElement && !input.disabled) {
+                        checkStep(i);
+                        break;
+                    }
+                }
+            }
+        });
+
         window.onload = initGame;
     </script>
 </body>
