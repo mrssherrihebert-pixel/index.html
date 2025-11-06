@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Games Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .menu-container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 1.3em;
+            margin-bottom: 40px;
+        }
+
+        .game-grid {
+            display: grid;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card.next-ten {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .game-card.partners {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .game-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .game-description {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 600px) {
+            .menu-container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .game-title {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <h1>🎮 Math Games</h1>
+        <p class="subtitle">Choose a game to practice your math skills!</p>
+
+        <div class="game-grid">
+            <a href="next-ten-game.html" class="game-card next-ten">
+                <div class="game-icon">🎯</div>
+                <div class="game-title">Next Ten Game</div>
+                <div class="game-description">
+                    Find the next ten and how many more to get there!
+                    <br>Practice with numbers 11-989
+                </div>
+            </a>
+
+            <a href="partners-to-ten-game.html" class="game-card partners">
+                <div class="game-icon">🎯</div>
+                <div class="game-title">Partners to Ten</div>
+                <div class="game-description">
+                    Master making ten and extend to larger numbers!
+                    <br>Practice number bonds and place value
+                </div>
+            </a>
+        </div>
+
+        <div class="footer">
+            Click on any game to start playing! 🚀
+        </div>
+    </div>
+</body>
+</html>
